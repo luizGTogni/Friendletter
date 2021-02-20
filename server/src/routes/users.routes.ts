@@ -1,63 +1,72 @@
 import { Router } from 'express';
-import { v4 as uuid } from 'uuid';
+import { getRepository } from 'typeorm';
+
+import User from '../models/User';
+
+import CreateUserService from '../services/CreateUserService';
+
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const usersRouter = Router();
 
-interface Address {
-  country: string;
-  city: string;
-}
-
-interface User {
-  id: string;
+interface UserDTO {
+  username: string;
   name: string;
   email: string;
   password?: string;
   gender: string;
-  hobbies: string[];
+  hobbies: string;
   birth: Date;
-  address: Address[];
+  address_id: string;
   avatar_url: string;
   biography: string;
 }
 
-const users: User[] = [];
+usersRouter.get('/', ensureAuthenticated, async (request, response) => {
+  const usersRepository = getRepository(User);
+  const users = await usersRepository.find();
 
-usersRouter.get('/', (request, response) => {
   return response.json(users);
 });
 
-usersRouter.post('/', (request, response) => {
+usersRouter.post('/', async (request, response) => {
   const {
+    username,
     name,
     email,
     password,
     gender,
     hobbies,
     birth,
-    address,
+    country,
+    city,
     avatar_url,
     biography,
   } = request.body;
 
-  const user: User = {
-    id: uuid(),
+  const createUser = new CreateUserService();
+
+  const user: UserDTO = await createUser.execute({
+    username,
     name,
     email,
     password,
     gender,
-    birth,
     hobbies,
-    address,
+    birth,
+    country,
+    city,
     avatar_url,
     biography,
-  };
-
-  users.push(user);
+  });
 
   delete user.password;
 
   return response.json(user);
 });
+
+usersRouter.put('/', ensureAuthenticated, async (request, response) => {});
+
+usersRouter.delete('/', ensureAuthenticated, async (request, response) => {});
 
 export default usersRouter;
