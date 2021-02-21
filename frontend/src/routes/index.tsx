@@ -1,14 +1,20 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+
+import Route from './Route';
 
 import SignIn from '../pages/SignIn';
 import SignUpP1 from '../pages/SignUpP1';
-// import SignUpP2 from '../pages/SignUpP2';
+import SignUpP2 from '../pages/SignUpP2';
+import StorageBox from '../pages/StorageBox';
 
 const Routes: React.FC = () => (
   <Switch>
-    <Route path="/signin" component={SignIn} />
+    <Route path="/" exact component={SignIn} />
     <Route path="/signup" component={SignUpP1} />
+    <Route path="/signup-continuation" component={SignUpP2} />
+
+    <Route path="/storagebox" component={StorageBox} isPrivate />
   </Switch>
 );
 
