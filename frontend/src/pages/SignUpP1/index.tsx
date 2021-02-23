@@ -1,11 +1,11 @@
 import React, { useCallback, useRef } from 'react';
 import { FiUser, FiLock, FiMail, FiSmile } from 'react-icons/fi';
-import { FormHandles, SubmitHandler } from '@unform/core';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import api from '../../services/api';
+import { main } from '../../services/api';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -18,7 +18,7 @@ import { useToast } from '../../hooks/toast';
 
 import { Container, Content, Background, FilterBG } from './styles';
 
-interface FormData {
+interface SignUpFormData {
   name: string;
   username: string;
   email: string;
@@ -26,14 +26,19 @@ interface FormData {
   repassword: string;
 }
 
-const SignUpP1: React.FC = () => {
+interface CheckUniqueData {
+  username: boolean;
+  email: boolean;
+}
+
+function SignUpP1(): JSX.Element {
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
   const history = useHistory();
 
   const handleSubmit = useCallback(
-    async (data: SubmitHandler<FormData>) => {
+    async (data: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -67,6 +72,29 @@ const SignUpP1: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
+
+        const response = await main.post('users/fieldAlreadyExists', {
+          username: data.username,
+          email: data.email,
+        });
+
+        const FieldAlreadyExists: CheckUniqueData = response.data;
+
+        if (FieldAlreadyExists.username) {
+          formRef.current?.setErrors({
+            username: 'Username já existe, tente outro',
+          });
+
+          return;
+        }
+
+        if (FieldAlreadyExists.email) {
+          formRef.current?.setErrors({
+            email: 'E-mail já existe, tente outro',
+          });
+
+          return;
+        }
 
         history.push({
           pathname: '/signup-continuation',
@@ -129,6 +157,6 @@ const SignUpP1: React.FC = () => {
       </Background>
     </Container>
   );
-};
+}
 
 export default SignUpP1;

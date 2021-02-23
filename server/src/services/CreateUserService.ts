@@ -13,12 +13,12 @@ interface Request {
   email: string;
   password: string;
   gender: string;
-  hobbies: string;
+  hobbies?: string;
   birth: string;
   country: string;
   city: string;
   avatar_url: string;
-  biography: string;
+  biography?: string;
 }
 
 class CreateUserService {
@@ -28,12 +28,10 @@ class CreateUserService {
     email,
     password,
     gender,
-    hobbies,
     birth,
     country,
     city,
     avatar_url,
-    biography,
   }: Request): Promise<User> {
     const usersRepository = getRepository(User);
 
@@ -68,8 +66,6 @@ class CreateUserService {
       password: hashedPassword,
       gender,
       birth: birthTimestamp,
-      hobbies,
-      biography,
       avatar_url,
       address,
     });

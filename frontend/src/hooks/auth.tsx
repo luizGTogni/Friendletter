@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import api from '../services/api';
+import { main } from '../services/api';
 
 interface SignInCreadentials {
   email: string;
@@ -32,7 +32,7 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions', {
+    const response = await main.post('sessions', {
       email,
       password,
     });

@@ -22,7 +22,7 @@ interface SignInFormData {
   password: string;
 }
 
-const SignIn: React.FC = () => {
+function SignIn(): JSX.Element {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
@@ -67,7 +67,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, history],
   );
 
   return (
@@ -102,6 +102,6 @@ const SignIn: React.FC = () => {
       </Background>
     </Container>
   );
-};
+}
 
 export default SignIn;

@@ -28,13 +28,12 @@ interface AuthenticateUserData {
   token: string;
 }
 
-sessionsRouter.post('/login', async (request, response) => {
-  const { username, email, password }: Request = request.body;
+sessionsRouter.post('/', async (request, response) => {
+  const { email, password }: Request = request.body;
 
   const authenticateUser = new AuthenticateUserService();
 
   const { user, token }: AuthenticateUserData = await authenticateUser.execute({
-    username,
     email,
     password,
   });

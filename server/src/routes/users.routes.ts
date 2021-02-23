@@ -29,19 +29,30 @@ usersRouter.get('/', ensureAuthenticated, async (request, response) => {
   return response.json(users);
 });
 
+usersRouter.post('/fieldAlreadyExists', async (request, response) => {
+  const { username, email } = request.body;
+
+  const usersRepository = getRepository(User);
+
+  const existsUsername = !!(await usersRepository.findOne({
+    where: { username },
+  }));
+  const existsEmail = !!(await usersRepository.findOne({ where: { email } }));
+
+  return response.json({ username: existsUsername, email: existsEmail });
+});
+
 usersRouter.post('/', async (request, response) => {
   const {
-    username,
     name,
+    username,
     email,
     password,
     gender,
-    hobbies,
     birth,
     country,
     city,
     avatar_url,
-    biography,
   } = request.body;
 
   const createUser = new CreateUserService();
@@ -52,12 +63,10 @@ usersRouter.post('/', async (request, response) => {
     email,
     password,
     gender,
-    hobbies,
     birth,
     country,
     city,
     avatar_url,
-    biography,
   });
 
   delete user.password;
@@ -65,8 +74,8 @@ usersRouter.post('/', async (request, response) => {
   return response.json(user);
 });
 
-usersRouter.put('/', ensureAuthenticated, async (request, response) => {});
+// usersRouter.put('/', ensureAuthenticated, async (request, response) => {});
 
-usersRouter.delete('/', ensureAuthenticated, async (request, response) => {});
+// usersRouter.delete('/', ensureAuthenticated, async (request, response) => {});
 
 export default usersRouter;

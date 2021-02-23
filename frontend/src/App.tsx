@@ -7,15 +7,17 @@ import GlobalStyle from './styles/global';
 
 import AppProvider from './hooks';
 
-const App: React.FC = () => (
-  <>
-    <BrowserRouter>
-      <AppProvider>
-        <Routes />
-      </AppProvider>
-    </BrowserRouter>
-    <GlobalStyle />
-  </>
-);
+function App(): JSX.Element {
+  return (
+    <>
+      <BrowserRouter>
+        <AppProvider>
+          <Routes />
+        </AppProvider>
+      </BrowserRouter>
+      <GlobalStyle />
+    </>
+  );
+}
 
 export default App;
