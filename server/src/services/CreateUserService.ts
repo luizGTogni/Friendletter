@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 
 import User from '../models/User';
@@ -6,6 +6,7 @@ import User from '../models/User';
 import AppError from '../error/AppError';
 
 import CreateAddressService from './CreateAddressService';
+import UsersRepository from '../repositories/UsersRepository';
 
 interface Request {
   username: string;
@@ -17,7 +18,7 @@ interface Request {
   birth: string;
   country: string;
   city: string;
-  avatar_url: string;
+  avatar_url?: string;
   biography?: string;
 }
 
@@ -31,9 +32,8 @@ class CreateUserService {
     birth,
     country,
     city,
-    avatar_url,
   }: Request): Promise<User> {
-    const usersRepository = getRepository(User);
+    const usersRepository = getCustomRepository(UsersRepository);
 
     const checkUsernameExists = await usersRepository.findOne({
       where: { username },
@@ -66,7 +66,6 @@ class CreateUserService {
       password: hashedPassword,
       gender,
       birth: birthTimestamp,
-      avatar_url,
       address,
     });
 

@@ -12,6 +12,7 @@ import { Container } from './styles';
 
 interface ToastProps {
   toast: ToastData;
+  hasDescription: boolean;
   style: object;
 }
 const icons = {
@@ -20,7 +21,11 @@ const icons = {
   success: <FiCheckCircle size={24} />,
 };
 
-function Toast({ toast, style }: ToastProps): JSX.Element {
+function Toast({
+  toast,
+  hasDescription = false,
+  style,
+}: ToastProps): JSX.Element {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -34,11 +39,7 @@ function Toast({ toast, style }: ToastProps): JSX.Element {
   }, [removeToast, toast.id]);
 
   return (
-    <Container
-      type={toast.type}
-      hasDescription={!!toast.description}
-      style={style}
-    >
+    <Container type={toast.type} hasDescription={hasDescription} style={style}>
       {icons[toast.type || 'info']}
 
       <div>

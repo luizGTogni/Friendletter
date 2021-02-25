@@ -32,6 +32,12 @@ export const Content = styled.div`
       text-align: center;
     }
 
+    > div {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+
     a {
       margin-top: 16px;
       display: block;

@@ -20,7 +20,12 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ toasts }) => {
   return (
     <Container>
       {toastWithTransitions.map(({ item, key, props }) => (
-        <Toast key={key} style={props} toast={item} />
+        <Toast
+          key={key}
+          style={props}
+          hasDescription={!!item.description}
+          toast={item}
+        />
       ))}
     </Container>
   );
